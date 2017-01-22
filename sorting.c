@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <time.h>
 
-void swap(long int *arr,long int n)
+void neighbor_swap(long int *arr,long int n)
 {
 
 	if(arr[n]>arr[n+1])
@@ -11,11 +11,11 @@ void swap(long int *arr,long int n)
 		long int temp = arr[n];
 		arr[n] = arr[n+1];
 		arr[n+1] = temp;
-		n--;
-		if(n>=0)
-		{
-			swap(arr,n);
-		}
+	}
+	n--;
+	if(n>=0)
+	{
+		neighbor_swap(arr,n);
 	}
 
 }
@@ -41,7 +41,7 @@ int main()
 				printf("%ld; ",nosort[i]);
 			break;
 		case 2:
-			for(i = 0;i < nobs;i++)
+			for(i = nobs-1;i >= 0;i--)
 			{
 				long int s;
 				scanf("%ld", &s);
@@ -52,11 +52,11 @@ int main()
 		printf("you had 1 job...");
 	}
 
-	printf("Selection sort...\n");
+	printf("\nBubble sort...\n");
 	i=0;
 	while(i<nobs-1)
 	{
-		swap(nosort,i);
+		neighbor_swap(nosort,i);
 		i+=1;
 	}
 	long int c;

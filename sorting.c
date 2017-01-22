@@ -17,7 +17,13 @@ void neighbor_swap(long int *arr,long int n)
 	{
 		neighbor_swap(arr,n);
 	}
+}
 
+void swap(long int *arr,long int p,long int small)
+{
+	long int temp = arr[small];
+	arr[small] = arr[p];
+	arr[p] = temp;
 }
 
 int main()
@@ -49,15 +55,38 @@ int main()
 			}
 			break;
 		default:
-		printf("you had 1 job...");
+			printf("you had 1 job...");
 	}
-
-	printf("\nBubble sort...\n");
-	i=0;
-	while(i<nobs-1)
-	{
-		neighbor_swap(nosort,i);
-		i+=1;
+	printf("What sorting algorithm do you want to use ?\n1 - Bubble\n2 - Selection");
+	int method;
+	scanf("%d",&method);
+	switch(method){
+			case 1:
+				printf("Performing bubble sort...\n");
+				i=0;
+				while(i<nobs-1)
+				{
+					neighbor_swap(nosort,i);
+					i+=1;
+					break;
+				}
+			case 2:
+				printf("Performing selection sort...");
+				long int small;
+				long int p;
+				for(p=0;p<nobs;p++)
+				{
+					small = p;
+					for(i=p;i<nobs;i++){
+						if(nosort[i]<nosort[small]){
+							small=i;
+						}
+					}
+					swap(nosort,p,small);
+				}
+				break;
+			default:
+				printf("You did not choose a valid method, bye.");
 	}
 	long int c;
 	printf("Sorted array:\n");

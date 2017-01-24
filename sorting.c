@@ -56,6 +56,7 @@ int main()
 				nosort[i] = s;
 			}
 			break;
+			// Need to add merge sort
 		default:
 			printf("you had 1 job...");
 	}

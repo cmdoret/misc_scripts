@@ -38,6 +38,7 @@ int main()
 	long int i;
 	switch(usrchoice){
 		case 1:
+		// Randomly generating numbers between 0 and 100
 			for(i=0;i<nobs;i++)
 			{
 				nosort[i] = rand() % 100;
@@ -47,6 +48,7 @@ int main()
 				printf("%ld; ",nosort[i]);
 			break;
 		case 2:
+		// Scanning manually entered numbers
 			for(i = nobs-1;i >= 0;i--)
 			{
 				long int s;
@@ -62,15 +64,17 @@ int main()
 	scanf("%d",&method);
 	switch(method){
 			case 1:
+			// Bubble sort algorithm
 				printf("Performing bubble sort...\n");
 				i=0;
 				while(i<nobs-1)
 				{
 					neighbor_swap(nosort,i);
 					i+=1;
-					break;
 				}
+				break;
 			case 2:
+			// Selection sort algorithm
 				printf("Performing selection sort...");
 				long int small;
 				long int p;

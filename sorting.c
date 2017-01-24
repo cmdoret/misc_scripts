@@ -60,7 +60,8 @@ int main()
 		default:
 			printf("you had 1 job...");
 	}
-	printf("What sorting algorithm do you want to use ?\n1 - Bubble\n2 - Selection");
+	printf("What sorting algorithm do you want to use ?\n1 - Bubble\n2 -\
+	 Selection\n3 - Insertion");
 	int method;
 	scanf("%d",&method);
 	switch(method){
@@ -88,6 +89,22 @@ int main()
 						}
 					}
 					swap(nosort,p,small);
+				}
+				break;
+			case 3:
+				// Insertion sort algorithm
+				printf("Insertion sort...\n");
+				for(i=1;i<nobs-1;i++)
+				{
+					p = i+1;
+					long int shift = 1;
+					while(p>0){
+						if(nosort[p-shift]>nosort[p]){
+							shift++;
+						}
+						swap(nosort,p,p-shift);
+						p--;
+					}
 				}
 				break;
 			default:

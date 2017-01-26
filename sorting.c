@@ -94,15 +94,20 @@ int main()
 			case 3:
 				// Insertion sort algorithm
 				printf("Insertion sort...\n");
-				for(i=1;i<nobs-1;i++)
+				for(i=0;i<nobs-1;i++)
+				// Iterating over positions in array
 				{
-					p = i+1;
+					p = i + 1;
+					// Position to be swapped
 					long int shift = 1;
+					// Resetting positioin used for comparison
 					while(p>0){
+						//do not get out of array
 						if(nosort[p-shift]>nosort[p]){
+							//If position to be swapped
 							shift++;
+							swap(nosort,p,p-shift);
 						}
-						swap(nosort,p,p-shift);
 						p--;
 					}
 				}

@@ -38,6 +38,7 @@ int main()
 	long int i;
 	switch(usrchoice){
 		case 1:
+		// Randomly generating numbers between 0 and 100
 			for(i=0;i<nobs;i++)
 			{
 				nosort[i] = rand() % 100;
@@ -47,6 +48,7 @@ int main()
 				printf("%ld; ",nosort[i]);
 			break;
 		case 2:
+		// Scanning manually entered numbers
 			for(i = nobs-1;i >= 0;i--)
 			{
 				long int s;
@@ -54,23 +56,27 @@ int main()
 				nosort[i] = s;
 			}
 			break;
+			// Need to add merge sort
 		default:
 			printf("you had 1 job...");
 	}
-	printf("What sorting algorithm do you want to use ?\n1 - Bubble\n2 - Selection");
+	printf("What sorting algorithm do you want to use ?\n1 - Bubble\n2 -\
+	 Selection\n3 - Insertion");
 	int method;
 	scanf("%d",&method);
 	switch(method){
 			case 1:
+			// Bubble sort algorithm
 				printf("Performing bubble sort...\n");
 				i=0;
 				while(i<nobs-1)
 				{
 					neighbor_swap(nosort,i);
 					i+=1;
-					break;
 				}
+				break;
 			case 2:
+			// Selection sort algorithm
 				printf("Performing selection sort...");
 				long int small;
 				long int p;
@@ -83,6 +89,27 @@ int main()
 						}
 					}
 					swap(nosort,p,small);
+				}
+				break;
+			case 3:
+				// Insertion sort algorithm
+				printf("Insertion sort...\n");
+				for(i=0;i<nobs-1;i++)
+				// Iterating over positions in array
+				{
+					p = i + 1;
+					// Position to be swapped
+					long int shift = 1;
+					// Resetting positioin used for comparison
+					while(p>0){
+						//do not get out of array
+						if(nosort[p-shift]>nosort[p]){
+							//If position to be swapped
+							shift++;
+							swap(nosort,p,p-shift);
+						}
+						p--;
+					}
 				}
 				break;
 			default:

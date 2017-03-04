@@ -2,6 +2,22 @@
 # Cyril Matthey-Doret
 # Wed Dec 14 00:53:41 2016 ------------------------------
 
+library("png")
+# download the mandrill image
+if(!file.exists("mandrill.png")){
+  download.file(url = "http://graphics.cs.williams.edu/data/images/mandrill.png", 
+                destfile="mandrill.png")
+}
+
+# load the PNG into an RGB image object
+mandrill = readPNG("mandrill.png")
+
+# This mandrill is 512 x 512 x 3 array
+dim(mandrill)
+## [1] 512 512   3
+man_R<-t(mandrill[,,1])[,c(512:1)]
+man_G<-t(mandrill[,,2])[,c(512:1)]
+man_B<-t(mandrill[,,3])[,c(512:1)]
 
 get_neigh<- function(mat,md=F,I,J,n.row,n.col){
   ind_neigh <- c()
@@ -37,8 +53,8 @@ for(i in 1:100){
   Md <- mat.convolution(Md,med=T)
   #Mc <- sqrt(Mc)
   #par(mfrow=c(1,2))
-  image(t(Mc))
-  image(t(Md))
+  image(Mc)
+  image(Md)
   Sys.sleep(0.01)
 }
 

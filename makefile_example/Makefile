@@ -1,50 +1,23 @@
- 
-# Usually, only these lines need changing
-TEXFILE= paper
-RDIR= .
-FIGDIR= ./figs
+IN_DATA=data/test_data.csv
+REPORT=report
+NORM=data/norm_data.csv
 
-# list R files
-RFILES := $(wildcard $(RDIR)/*.R)
-# pdf figures created by R
-PDFFIGS := $(wildcard $(FIGDIR)/*.pdf)
-# Indicator files to show R file has run
-OUT_FILES:= $(RFILES:.R=.Rout)
-# Indicator files to show pdfcrop has run
-CROP_FILES:= $(PDFFIGS:.pdf=.pdfcrop)
+.PHONY : all
+all : $(REPORT).pdf
 
-all: $(TEXFILE).pdf $(OUT_FILES) $(CROP_FILES)
+$(REPORT).pdf : $(REPORT).tex $(NORM) $(REPORT).png
+	texi2pdf -b $(REPORT).tex
 
-#if some R files depend on others.
-$(RDIR)/plot.Rout: $(RDIR)/plot.R $(RDIR)/functions.R $(RDIR)/read.R
-	R CMD BATCH $<
-# RUN EVERY R FILE
-$(RDIR)/%.Rout: $(RDIR)/%.R $(RDIR)/functions.R
-	R CMD BATCH $< 
+$(NORM) : $(IN_DATA) process.R
+	Rscript process.R $< $@
 
-# CROP EVERY PDF FIG FILE
-$(FIGDIR)/%.pdfcrop: $(FIGDIR)/%.pdf
-	pdfcrop $< $< && touch $@
+$(REPORT).png : $(NORM)
+	Rscript plot.R $< $@
 
-# Compile main tex file
-$(TEXFILE).pdf: $(TEXFILE).tex $(OUT_FILES) $(CROP_FILES)
-	latexmk -pdf -quiet $(TEXFILE)
-#	rubber --pdf $(TEXFILE)
-#	rubber-info $(TEXFILE)
-	
-# Run R files
-R: $(OUT_FILES)
-
-# View main tex file
-view: $(TEXFILE).pdf
-	evince $(TEXFILE).pdf &
-
-# Clean up stray files
-clean:
-	rm -fv $(OUT_FILES) 
-	rm -fv $(CROP_FILES)
-	rm -fv *.aux *.log *.toc *.blg *.bbl *.synctex.gz *.out *.bcf *blx.bib *.run.xml
-	rm -fv *.fdb_latexmk *.fls
-	rm -fv $(TEXFILE).pdf
-
-.PHONY: all clean
+.PHONY : clean
+clean :
+	rm -f $(NORM)
+	rm -f $(REPORT).pdf
+	rm -f $(REPORT).png
+	rm -f $(REPORT).log
+	rm -f $(REPORT).aux

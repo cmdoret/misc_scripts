@@ -1,4 +1,4 @@
 
 # Various scripts
 
-This repo contains different script I wrote for fun.
+This repo contains different scripts and programs I wrote for fun.

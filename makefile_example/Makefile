@@ -21,3 +21,9 @@ clean :
 	rm -f $(REPORT).png
 	rm -f $(REPORT).log
 	rm -f $(REPORT).aux
+
+.PHONY : variables
+variables : 
+	@echo 'raw data: $(IN_DATA)'
+	@echo 'processed data: $(NORM)'
+	@echo 'final report: $(REPORT)'

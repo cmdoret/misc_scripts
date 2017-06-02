@@ -99,7 +99,7 @@ assess_perf <- data.frame(iterations=numeric(0),
   
 for(it in seq(1,100,1)){
   for(f in seq(2,nrow(iris),1)){
-    results <-cross_val(iris,out_var, folds=f,exact=F,speed=0.005, iter=it)
+    results <-cross_val(iris,out_var, folds=f,exact=F,speed=0.05, iter=it)
     tmp_row <- c(iterations=it, fold=f, 
                 cost=mean((iris[,out_var] - results$accuracy$pred)^2))
     assess_perf <- rbind(assess_perf, tmp_row)
@@ -109,11 +109,14 @@ colnames(assess_perf) <- c('iterations', 'k_fold', 'mean_squared_error')
 assess_plot <- assess_perf[!is.na(assess_perf$mean_squared_error),]
 scatter3D(assess_plot$iterations, assess_plot$k_fold, -log(assess_plot$mean_squared_error),clab=colnames(assess_plot))
 
-
-results <-cross_val(iris,out_var, folds=5, exact=T)
+for(it in seq(1,3000,10)){
+results <-cross_val(iris,out_var, folds=3, exact=F, speed=0.0005, iter = it)
 plot(as.numeric(iris[,out_var]),results$accuracy$pred,col=results$accuracy$folds,
      xlim=c(0,10),ylim=c(0,10))
 abline(a=0,b=1)
+Sys.sleep(0.2)
+}
+
 plot(density((iris[,out_var] - results$accuracy$pred)^2))
 
 boxplot(t(do.call(cbind,results$weights)),pch="x")

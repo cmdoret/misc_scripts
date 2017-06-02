@@ -83,26 +83,33 @@ cross_val <- function(data, response, folds, exact=T, speed=0.001, iter=200){
   return(list(accuracy=accuracy, weights=weight_list, MSE=MSE))
 }
 
-#=====================
-# Playing with model =
-#=====================
+#============================
+# Playing around with model =
+#============================
 
 # Predicting quantitative variable
 out_var='Petal.Length'
+cross_val(iris, out_var, folds=150, exact=T)
+cross_val(iris,out_var, folds=5,exact=F,speed=0.005, iter=100)
+
+if(FALSE){
+
 assess_perf <- data.frame(iterations=numeric(0),
-                          learn=numeric(0), cost=numeric(0))
-for(it in seq(1,100,5)){
-  for(lc in seq(0.0001,0.5,0.005)){
-    results <-cross_val(iris,out_var, folds=5,exact=F,speed=lc, iter=it)
-    tmp_row <- c(iterations=it, learn=lc, 
+                          fold=numeric(0), cost=numeric(0))
+  
+for(it in seq(1,100,1)){
+  for(f in seq(2,nrow(iris),1)){
+    results <-cross_val(iris,out_var, folds=f,exact=F,speed=0.005, iter=it)
+    tmp_row <- c(iterations=it, fold=f, 
                 cost=mean((iris[,out_var] - results$accuracy$pred)^2))
     assess_perf <- rbind(assess_perf, tmp_row)
   }
 }
-colnames(assess_perf) <- c('iterations', 'learning', 'mean_squared_error')
-assess_plot <- assess_perf[is.finite(assess_perf$mean_squared_error),]
-scatter3D(assess_plot$iterations, assess_plot$learning, log(assess_plot$mean_squared_error),clab=colnames(assess_plot))
-if(FALSE){
+colnames(assess_perf) <- c('iterations', 'k_fold', 'mean_squared_error')
+assess_plot <- assess_perf[!is.na(assess_perf$mean_squared_error),]
+scatter3D(assess_plot$iterations, assess_plot$k_fold, -log(assess_plot$mean_squared_error),clab=colnames(assess_plot))
+
+
 results <-cross_val(iris,out_var, folds=5, exact=T)
 plot(as.numeric(iris[,out_var]),results$accuracy$pred,col=results$accuracy$folds,
      xlim=c(0,10),ylim=c(0,10))

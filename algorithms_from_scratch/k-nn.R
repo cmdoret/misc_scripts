@@ -1,6 +1,11 @@
 # Implementing k-nearest neighbours from scratch.
 # Cyril Matthey-Doret
 
-knn <- function(){}
+knn <- function(data, k){
+  # implementing k-nearest neighbours
+}
 
-cross_val <- function(){}
+conf_mat <- function(){
+  # confusion matrix to assess quality of model
+  
+}

@@ -79,6 +79,7 @@ cross_val <- function(data, response, folds, exact=T, speed=0.001, iter=200){
     test_obs <- data.frame(pred=test_obs,folds=rep(i,fold_size))
     accuracy[fold_list[,i],] <- test_obs
     #accuracy <- rbind(accuracy, test_obs)
+    Sys.sleep(0.5)
   }
   return(list(accuracy=accuracy, weights=weight_list, MSE=MSE))
 }

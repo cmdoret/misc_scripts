@@ -6,11 +6,10 @@
 
 library(tidyverse)
 
-knn <- function(df, k, softmax=F, obs, response){
+knn <- function(df, k, obs, response){
   # implementing k-nearest neighbours. This function can work with
   # categorical or numeric response. It can only predict one observation
-  # at a time. Possibility to chose between softmax weighted votes or simple
-  # cut-off at k-nearest neighbours. 
+  # at a time. 
   obs <- select(obs,-matches(response))
   isNum <- sapply(obs,is.numeric)
   obs <- select(obs, which(isNum))
@@ -20,6 +19,7 @@ knn <- function(df, k, softmax=F, obs, response){
   N <- nrow(df)  # Number of observations
   p <- length(num_features)  # Number of input variables
   X <- as.matrix(df[,num_features])  # Transforming into matrix
+  X <- prcomp(t(X))$rotation[,c(1,2)]; p <- 2
   Y <- as.matrix(df[,response]) # Response variable as matrix
   dimnames(Y)[[2]] <- list(response)
   O <- matrix(unlist(rep(unname(obs),N)),byrow=T,nrow=N)  # obs values as matrix
@@ -28,28 +28,21 @@ knn <- function(df, k, softmax=F, obs, response){
 
   D <- (X-O)^2 %*% matrix(rep(1, p), ncol = 1)  # Euclidean distance calculation
   D <- D[order(D[,1]),][1:k]  # Filtering k-nearest neighbours
-  if(softmax){D <- 1/(1+exp(-(D-mean(D))/sd(D)))} # Normalize distance to reduce impact of outliers
   if(is.numeric(df[,response])){  # regression mode
-    weight <- ifelse(softmax,yes = list(round(exp(-D)/sum(exp(-D)),3)),
-                     no = list(rep(x = 1/k,times=k)))[[1]]
-    # weights are either all the same or defined by softmax function
-    obs[,response] <- weight %*% as.matrix(Y[names(D),])
+    obs[,response] <- mean(Y[names(D),])
     return(obs)
+    
   } else{  # classification mode
     votes <- table(namesD)
-    if(softmax){
-    out_vote <- votes[votes==max(votes)]
-    out_vote <- out_vote[sample(x = 1:length(out_vote),size = 1)]
-    prop_votes <- sapply(votes,function(x) x/sum(votes))
-    }
     # picking randomly a choice if equal number of choices
-    obs[,response] <- out_vote
+    obs[,response] <- votes[votes==max(votes)]
     return(list(class=obs, confidence=prop_votes[names(out_vote)]))
   }
 }
 
-knn(df = swiss[-1,], k = 5, obs = swiss[1,], softmax = F, response = 'Infant.Mortality')
-knn(df = iris[-1,], k = 10, obs = iris[1,], softmax = F, response = 'Petal.Width')
+knn(df = swiss[-1,], k = 5, obs = swiss[1,], response = 'Infant.Mortality')
+knn(df = iris[-1,], k = 10, obs = iris[100,], response = 'Petal.Width')
+
 
 conf_mat <- function(){
   # confusion matrix to assess quality of model
